@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Crime Management</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link nav-dashboard" href="index.html">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link nav-report" href="report.html">Report Crime</a></li>
+          <li class="nav-item"><a class="nav-link nav-admin active" href="admin.html">Admin</a></li>
+          <li class="nav-item"><a class="nav-link nav-register" href="register.html">Register</a></li>
+          <li class="nav-item"><a class="nav-link nav-auth" href="login.html">Login</a></li>
+          <li class="nav-item ms-lg-2"><span id="navUserBadge" class="user-badge d-none"></span></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4">
+    <h1 class="page-title">Admin Review Panel</h1>
+    <p id="adminMessage" class="mb-3"></p>
+    <p class="page-subtitle">Review pending submissions, validate details, and decide whether to publish or reject.</p>
+
+    <div id="pendingReports" class="row g-3">
+      <!-- Pending report cards render here -->
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app-shell.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
