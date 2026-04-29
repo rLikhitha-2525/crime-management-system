@@ -20,6 +20,14 @@
           <li class="nav-item"><a class="nav-link nav-dashboard" href="index.html">Dashboard</a></li>
           <li class="nav-item"><a class="nav-link nav-report" href="report.html">Report Crime</a></li>
           <li class="nav-item"><a class="nav-link nav-admin active" href="admin.html">Admin</a></li>
+          <li class="nav-item dropdown d-none" id="navNotifWrap">
+            <button class="btn btn-link nav-link dropdown-toggle text-white text-decoration-none py-2" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+              Alerts <span class="badge bg-danger rounded-pill d-none" id="notifBadge">0</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow border-secondary" style="min-width: 300px; max-height: 380px; overflow-y: auto;" id="notifMenu">
+              <li><span class="dropdown-item-text text-secondary small px-3 py-2">Loading…</span></li>
+            </ul>
+          </li>
           <li class="nav-item"><a class="nav-link nav-register" href="register.html">Register</a></li>
           <li class="nav-item"><a class="nav-link nav-auth" href="login.html">Login</a></li>
           <li class="nav-item ms-lg-2"><span id="navUserBadge" class="user-badge d-none"></span></li>
@@ -29,12 +37,30 @@
   </nav>
 
   <main class="container py-4">
-    <h1 class="page-title">Admin Review Panel</h1>
+    <h1 class="page-title">Admin Panel</h1>
     <p id="adminMessage" class="mb-3"></p>
-    <p class="page-subtitle">Review pending submissions, validate details, and decide whether to publish or reject.</p>
+    <p class="page-subtitle">Review new submissions, manage active map cases, and resolve or reject reports. Reporters receive alerts when you approve, reject, or resolve.</p>
 
-    <div id="pendingReports" class="row g-3">
-      <!-- Pending report cards render here -->
+    <ul class="nav nav-tabs admin-nav-tabs mb-3" id="adminTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="tab-pending-btn" data-bs-toggle="tab" data-bs-target="#tab-pending" type="button" role="tab" aria-controls="tab-pending" aria-selected="true">Pending review</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab-active-btn" data-bs-toggle="tab" data-bs-target="#tab-active" type="button" role="tab" aria-controls="tab-active" aria-selected="false">Active on map</button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="adminTabContent">
+      <div class="tab-pane fade show active" id="tab-pending" role="tabpanel" aria-labelledby="tab-pending-btn" tabindex="0">
+        <div id="pendingReports" class="row g-3">
+          <!-- Pending report cards -->
+        </div>
+      </div>
+      <div class="tab-pane fade" id="tab-active" role="tabpanel" aria-labelledby="tab-active-btn" tabindex="0">
+        <div id="activeReports" class="row g-3">
+          <!-- Active cases -->
+        </div>
+      </div>
     </div>
   </main>
 

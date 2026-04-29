@@ -114,6 +114,34 @@
     });
   }
 
+  async function getActiveReports() {
+    return request("admin/active/");
+  }
+
+  async function resolveReport(reportId) {
+    return request("admin/resolve/" + reportId + "/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({})
+    });
+  }
+
+  async function getNotifications() {
+    return request("notifications/");
+  }
+
+  async function markNotificationRead(notificationId) {
+    return request("notifications/" + notificationId + "/read/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({})
+    });
+  }
+
   window.CrimeAPI = {
     BASE_URL,
     getCrimes,
@@ -125,7 +153,11 @@
     logoutUser,
     getCurrentUser,
     getPendingReports,
+    getActiveReports,
     approveReport,
-    rejectReport
+    rejectReport,
+    resolveReport,
+    getNotifications,
+    markNotificationRead
   };
 })();

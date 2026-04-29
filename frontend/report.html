@@ -20,6 +20,14 @@
           <li class="nav-item"><a class="nav-link nav-dashboard" href="index.html">Dashboard</a></li>
           <li class="nav-item"><a class="nav-link nav-report active" href="report.html">Report Crime</a></li>
           <li class="nav-item"><a class="nav-link nav-admin" href="admin.html">Admin</a></li>
+          <li class="nav-item dropdown d-none" id="navNotifWrap">
+            <button class="btn btn-link nav-link dropdown-toggle text-white text-decoration-none py-2" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+              Alerts <span class="badge bg-danger rounded-pill d-none" id="notifBadge">0</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow border-secondary" style="min-width: 300px; max-height: 380px; overflow-y: auto;" id="notifMenu">
+              <li><span class="dropdown-item-text text-secondary small px-3 py-2">Loading…</span></li>
+            </ul>
+          </li>
           <li class="nav-item"><a class="nav-link nav-register" href="register.html">Register</a></li>
           <li class="nav-item"><a class="nav-link nav-auth" href="login.html">Login</a></li>
           <li class="nav-item ms-lg-2"><span id="navUserBadge" class="user-badge d-none"></span></li>

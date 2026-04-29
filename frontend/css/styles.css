@@ -198,6 +198,39 @@ main.container {
   background: linear-gradient(135deg, #2b6ef2, #2147ba);
 }
 
+.stat-card .btn-light {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.95);
+  color: #7f1d1d;
+  font-weight: 600;
+}
+
+.stat-card .btn-light:hover {
+  background: #ffffff;
+  color: #5b1111;
+}
+
+.admin-nav-tabs {
+  border-bottom-color: var(--border);
+}
+
+.admin-nav-tabs .nav-link {
+  color: var(--muted);
+  border-color: transparent transparent var(--border);
+  border-radius: 10px 10px 0 0;
+}
+
+.admin-nav-tabs .nav-link:hover {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.admin-nav-tabs .nav-link.active {
+  color: var(--text);
+  background: linear-gradient(180deg, rgba(28, 43, 70, 0.95) 0%, rgba(22, 36, 60, 0.95) 100%);
+  border-color: var(--border) var(--border) transparent;
+}
+
 .alert {
   border-radius: 10px;
   border: 1px solid transparent;
@@ -292,6 +325,20 @@ main.container {
   z-index: 1000;
   box-shadow: 0 10px 20px rgba(30, 41, 59, 0.35);
   font-weight: 700;
+}
+
+.crime-table {
+  --bs-table-bg: transparent;
+  --bs-table-color: #e5edf8;
+  --bs-table-striped-bg: rgba(30, 58, 102, 0.2);
+  --bs-table-striped-color: #e5edf8;
+  --bs-table-border-color: rgba(148, 163, 184, 0.22);
+}
+
+.crime-table td,
+.crime-table th {
+  vertical-align: middle;
+  font-size: 0.92rem;
 }
 
 canvas {

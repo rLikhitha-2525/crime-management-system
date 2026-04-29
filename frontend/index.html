@@ -22,6 +22,14 @@
           <li class="nav-item"><a class="nav-link nav-dashboard active" href="index.html">Dashboard</a></li>
           <li class="nav-item"><a class="nav-link nav-report" href="report.html">Report Crime</a></li>
           <li class="nav-item"><a class="nav-link nav-admin" href="admin.html">Admin</a></li>
+          <li class="nav-item dropdown d-none" id="navNotifWrap">
+            <button class="btn btn-link nav-link dropdown-toggle text-white text-decoration-none py-2" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+              Alerts <span class="badge bg-danger rounded-pill d-none" id="notifBadge">0</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow border-secondary" style="min-width: 300px; max-height: 380px; overflow-y: auto;" id="notifMenu">
+              <li><span class="dropdown-item-text text-secondary small px-3 py-2">Loading…</span></li>
+            </ul>
+          </li>
           <li class="nav-item"><a class="nav-link nav-register" href="register.html">Register</a></li>
           <li class="nav-item"><a class="nav-link nav-auth" href="login.html">Login</a></li>
           <li class="nav-item ms-lg-2"><span id="navUserBadge" class="user-badge d-none"></span></li>
@@ -43,7 +51,10 @@
       </div>
       <div class="col-12 col-md-6">
         <div class="card stat-card stat-danger">
-          <h5>High Risk Areas</h5>
+          <div class="d-flex justify-content-between align-items-center gap-2">
+            <h5 class="mb-0">High Risk Areas</h5>
+            <button id="showHighAlertBtn" type="button" class="btn btn-sm btn-light">Show Alert</button>
+          </div>
           <p id="riskAreas">0</p>
         </div>
       </div>
@@ -84,6 +95,31 @@
         <h5>Crime Distribution</h5>
       </div>
       <canvas id="crimeChart"></canvas>
+    </div>
+
+    <div class="surface-card mt-3">
+      <div class="panel-header">
+        <h5>Total Crimes List</h5>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-dark table-striped crime-table mb-0">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Crime Type</th>
+              <th>Description</th>
+              <th>Location</th>
+              <th>Status</th>
+              <th>Reported At</th>
+            </tr>
+          </thead>
+          <tbody id="crimeListBody">
+            <tr>
+              <td colspan="6" class="text-center text-secondary">No crimes found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </main>
 

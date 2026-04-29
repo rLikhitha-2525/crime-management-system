@@ -1,5 +1,9 @@
 function areaKey(latitude, longitude) {
-  return String(Math.round(latitude * 100) / 100) + "_" + String(Math.round(longitude * 100) / 100);
+  return (
+    String(Math.round(latitude * 100) / 100) +
+    "_" +
+    String(Math.round(longitude * 100) / 100)
+  );
 }
 
 function formatDate(value) {
@@ -16,10 +20,18 @@ function formatDate(value) {
 function popupTemplate(crime) {
   return (
     '<div class="popup-card">' +
-    "<h6>" + crime.title + "</h6>" +
-    "<p><strong>Type:</strong> " + crime.crime_type + "</p>" +
-    "<p><strong>Description:</strong> " + crime.description + "</p>" +
-    "<p><strong>Time:</strong> " + formatDate(crime.created_at) + "</p>" +
+    "<h6>" +
+    crime.title +
+    "</h6>" +
+    "<p><strong>Type:</strong> " +
+    crime.crime_type +
+    "</p>" +
+    "<p><strong>Description:</strong> " +
+    crime.description +
+    "</p>" +
+    "<p><strong>Time:</strong> " +
+    formatDate(crime.created_at) +
+    "</p>" +
     "</div>"
   );
 }
@@ -58,7 +70,7 @@ function drawRiskHotspot(layer, lat, lng, count) {
     weight: 1,
     fillColor: style.glow,
     fillOpacity: 0.25,
-    radius: style.radius + 220
+    radius: style.radius + 220,
   }).addTo(layer);
 
   L.circle(center, {
@@ -66,9 +78,11 @@ function drawRiskHotspot(layer, lat, lng, count) {
     weight: 2,
     fillColor: style.color,
     fillOpacity: 0.22,
-    radius: style.radius
+    radius: style.radius,
   })
-    .bindTooltip(style.label + " risk area (" + count + " crimes)", { className: "map-tooltip" })
+    .bindTooltip(style.label + " risk area (" + count + " crimes)", {
+      className: "map-tooltip",
+    })
     .addTo(layer);
 }
 
@@ -80,7 +94,7 @@ function drawPredictedHotspot(layer, lat, lng) {
     fillColor: "#93c5fd",
     fillOpacity: 0.18,
     radius: 720,
-    dashArray: "6, 6"
+    dashArray: "6, 6",
   })
     .bindTooltip("Predicted hotspot", { className: "map-tooltip" })
     .addTo(layer);
@@ -89,14 +103,19 @@ function drawPredictedHotspot(layer, lat, lng) {
 async function initDashboard() {
   const map = L.map("map").setView([12.97, 77.59], 12);
   const filterEl = document.getElementById("crimeTypeFilter");
+  const highAlertBtn = document.getElementById("showHighAlertBtn");
+  const crimeListBody = document.getElementById("crimeListBody");
+  const toast = document.getElementById("toast");
   let chartInstance = null;
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "OpenStreetMap"
+    attribution: "OpenStreetMap",
   }).addTo(map);
   addMapLegend(map);
 
-  const markerLayer = L.markerClusterGroup ? L.markerClusterGroup() : L.layerGroup();
+  const markerLayer = L.markerClusterGroup
+    ? L.markerClusterGroup()
+    : L.layerGroup();
   const riskLayer = L.layerGroup();
   const predictionLayer = L.layerGroup();
   map.addLayer(markerLayer);
@@ -118,23 +137,66 @@ async function initDashboard() {
       type: "bar",
       data: {
         labels: Object.keys(typeCount),
-        datasets: [{ label: "Crime Count", data: Object.values(typeCount) }]
-      }
+        datasets: [{ label: "Crime Count", data: Object.values(typeCount) }],
+      },
     });
+  }
+
+  function renderCrimeList(rows) {
+    if (!crimeListBody) {
+      return;
+    }
+    if (!rows.length) {
+      crimeListBody.innerHTML =
+        '<tr><td colspan="6" class="text-center text-secondary">No crimes found.</td></tr>';
+      return;
+    }
+
+    crimeListBody.innerHTML = rows
+      .map((crime) => {
+        const lat = Number(crime.latitude).toFixed(4);
+        const lng = Number(crime.longitude).toFixed(4);
+        const statusText =
+          crime.case_status === "approved"
+            ? "Active (on map)"
+            : crime.case_status || "—";
+        return (
+          "<tr>" +
+          "<td>" +
+          (crime.title || "-") +
+          "</td>" +
+          "<td>" +
+          (crime.crime_type || "-") +
+          "</td>" +
+          "<td>" +
+          (crime.description || "-") +
+          "</td>" +
+          "<td>" +
+          lat +
+          ", " +
+          lng +
+          "</td>" +
+          "<td>" +
+          statusText +
+          "</td>" +
+          "<td>" +
+          formatDate(crime.created_at) +
+          "</td>" +
+          "</tr>"
+        );
+      })
+      .join("");
   }
 
   try {
     const crimes = await window.CrimeAPI.getCrimes();
     const alerts = await window.CrimeAPI.getAlerts();
     const predictions = await window.CrimeAPI.getPredictions();
+    const zones = alerts.zones || [];
 
-    const areaCounts = {};
-    crimes.forEach((crime) => {
-      const key = areaKey(crime.latitude, crime.longitude);
-      areaCounts[key] = (areaCounts[key] || 0) + 1;
-    });
-
-    const crimeTypes = Array.from(new Set(crimes.map((crime) => crime.crime_type).filter(Boolean))).sort();
+    const crimeTypes = Array.from(
+      new Set(crimes.map((crime) => crime.crime_type).filter(Boolean)),
+    ).sort();
     crimeTypes.forEach((type) => {
       const option = document.createElement("option");
       option.value = type;
@@ -144,9 +206,10 @@ async function initDashboard() {
 
     function renderFiltered() {
       const selectedType = filterEl.value;
-      const filteredCrimes = selectedType === "all"
-        ? crimes
-        : crimes.filter((crime) => crime.crime_type === selectedType);
+      const filteredCrimes =
+        selectedType === "all"
+          ? crimes
+          : crimes.filter((crime) => crime.crime_type === selectedType);
 
       markerLayer.clearLayers();
       riskLayer.clearLayers();
@@ -154,37 +217,76 @@ async function initDashboard() {
 
       const typeCount = {};
       filteredCrimes.forEach((crime) => {
-        const marker = L.marker([crime.latitude, crime.longitude]).bindPopup(popupTemplate(crime));
+        const marker = L.marker([crime.latitude, crime.longitude]).bindPopup(
+          popupTemplate(crime),
+        );
         markerLayer.addLayer(marker);
         typeCount[crime.crime_type] = (typeCount[crime.crime_type] || 0) + 1;
       });
 
-      alerts.high_risk_areas.forEach((area) => {
-        const [lat, lng] = area.split("_");
-        const count = areaCounts[area] || 5;
-        drawRiskHotspot(riskLayer, lat, lng, count);
+      zones.forEach((z) => {
+        let color;
+
+        if (z.level === "high") color = "red";
+        else if (z.level === "medium") color = "orange";
+        else if (z.level === "low") color = "yellow";
+
+        L.circle([z.lat, z.lng], {
+          color,
+          fillColor: color,
+          fillOpacity: 0.4,
+          radius: 600,
+        }).addTo(riskLayer);
       });
 
-      predictions.predicted_hotspots.forEach((area) => {
-        const [lat, lng] = area.split("_");
-        drawPredictedHotspot(predictionLayer, lat, lng);
+      predictions.predicted_hotspots.forEach((p) => {
+        if (typeof p === "string") {
+          const parts = p.split("_");
+          drawPredictedHotspot(predictionLayer, parts[0], parts[1]);
+        } else if (p && p.lat != null && p.lng != null) {
+          drawPredictedHotspot(predictionLayer, p.lat, p.lng);
+        }
       });
 
       document.getElementById("totalCrimes").innerText = filteredCrimes.length;
-      document.getElementById("riskAreas").innerText = alerts.high_risk_areas.length;
+      document.getElementById("riskAreas").innerText = zones.filter(
+        (z) => z.level === "high",
+      ).length;
       drawChart(typeCount);
+      renderCrimeList(filteredCrimes);
     }
 
-    renderFiltered();
-    filterEl.addEventListener("change", renderFiltered);
+    function triggerHighAlert() {
+      const highZones = zones.filter((z) => z.level === "high");
+      if (!highZones.length) {
+        toast.innerText = "No high risk areas right now";
+        toast.style.display = "block";
+        setTimeout(() => {
+          toast.style.display = "none";
+        }, 2500);
+        return;
+      }
 
-    if (alerts.high_risk_areas.length > 0) {
-      const toast = document.getElementById("toast");
-      toast.innerText = alerts.high_risk_areas.length + " High Risk Areas Detected";
+      const primaryArea = highZones[0];
+      const lat = parseFloat(primaryArea.lat);
+      const lng = parseFloat(primaryArea.lng);
+      map.flyTo([lat, lng], 14, { duration: 1.2 });
+
+      toast.innerText = highZones.length + " High Risk Areas Detected";
       toast.style.display = "block";
       setTimeout(() => {
         toast.style.display = "none";
       }, 4000);
+    }
+
+    renderFiltered();
+    filterEl.addEventListener("change", renderFiltered);
+    if (highAlertBtn) {
+      highAlertBtn.addEventListener("click", triggerHighAlert);
+    }
+
+    if (zones.some((z) => z.level === "high")) {
+      triggerHighAlert();
     }
   } catch (error) {
     console.error("Dashboard load error:", error);
