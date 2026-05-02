@@ -194,6 +194,17 @@ def predict_crime(request):
 
 @api_view(['GET'])
 @authentication_classes([CsrfExemptSessionAuthentication])
+def my_reports(request):
+    if not request.user.is_authenticated:
+        return Response({"error": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    reports = CrimeReport.objects.filter(reported_by=request.user).order_by("-created_at")
+    serializer = CrimeReportSerializer(reports, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@authentication_classes([CsrfExemptSessionAuthentication])
 def list_notifications(request):
     if not request.user.is_authenticated:
         return Response({"error": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
@@ -241,6 +252,18 @@ def admin_active_reports(request):
         return err
 
     reports = CrimeReport.objects.filter(case_status=CaseStatus.APPROVED).order_by('-created_at')
+    serializer = CrimeReportSerializer(reports, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@authentication_classes([CsrfExemptSessionAuthentication])
+def admin_rejected_reports(request):
+    err = _admin_required(request)
+    if err:
+        return err
+
+    reports = CrimeReport.objects.filter(case_status=CaseStatus.REJECTED).order_by('-created_at')
     serializer = CrimeReportSerializer(reports, many=True)
     return Response(serializer.data)
 

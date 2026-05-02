@@ -38,7 +38,9 @@
     const authLink = document.querySelector(".nav-auth");
     const badge = document.getElementById("navUserBadge");
 
+    toggleLink(".nav-mycases", Boolean(user));
     toggleLink(".nav-admin", Boolean(user && user.is_admin));
+    toggleLink(".nav-rejected", Boolean(user && user.is_admin));
     toggleLink(".nav-register", !user);
 
     if (badge) {

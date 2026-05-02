@@ -94,6 +94,10 @@
     return request("me/");
   }
 
+  async function getMyReports() {
+    return request("my-reports/");
+  }
+
   async function getPendingReports() {
     return request("admin/pending/");
   }
@@ -116,6 +120,10 @@
 
   async function getActiveReports() {
     return request("admin/active/");
+  }
+
+  async function getRejectedReports() {
+    return request("admin/rejected/");
   }
 
   async function resolveReport(reportId) {
@@ -152,8 +160,10 @@
     loginUser,
     logoutUser,
     getCurrentUser,
+    getMyReports,
     getPendingReports,
     getActiveReports,
+    getRejectedReports,
     approveReport,
     rejectReport,
     resolveReport,
